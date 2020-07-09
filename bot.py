@@ -1,5 +1,5 @@
 from selenium import webdriver
-import names,random,time
+import names,random,time,sys
 kaçhesapyapalım = int(input("Kaç Hesap Oluşturalım : "))
 print("Sistem Başlatılıyor")
 print("Mail Hizmeti Başlatılıyor")
@@ -10,7 +10,7 @@ tempchrome = webdriver.Chrome(options=tempmailoptions)
 tempchrome.get("https://smailpro.com/tool/tempmail")
 time.sleep(1)
 tempchrome.find_element_by_xpath("/html/body/div/main/div/div[2]/div[1]/div[1]/fieldset/div[9]/input").click()
-print("41Mail Hizmeti Hazır")
+print("Mail Hizmeti Hazır")
 for x in range(1,kaçhesapyapalım + 1):
     print("------------", str(x) + ". Hesap Oluşturuluyor ---------------------")
     ourname = names.get_full_name()
@@ -29,7 +29,7 @@ for x in range(1,kaçhesapyapalım + 1):
     chrome = webdriver.Chrome(options=chrome_options)
     print("Üyelik Formu Ayarlanıyor")
     chrome.get("https://www.instagram.com/accounts/emailsignup/")
-    time.sleep(8)
+    time.sleep(3)
     print("Bilgiler Giriliyor")
     try:
         chrome.find_element_by_xpath(
@@ -41,10 +41,10 @@ for x in range(1,kaçhesapyapalım + 1):
             "/html/body/div[1]/section/main/div/article/div/div[1]/div/form/div[5]/div/label/input").send_keys(userid)
         chrome.find_element_by_xpath(
             "/html/body/div[1]/section/main/div/article/div/div[1]/div/form/div[6]/div/label/input").send_keys(şifre)
-        time.sleep(2)
+        time.sleep(1)
         chrome.find_element_by_xpath(
             "/html/body/div[1]/section/main/div/article/div/div[1]/div/form/div[7]/div/button").click()
-        time.sleep(5)
+        time.sleep(2)
     except:
         print("Hata Oldu Bir Sonraki Hesaba Geçiliyor")
         chrome.close()
@@ -55,19 +55,27 @@ for x in range(1,kaçhesapyapalım + 1):
         "/html/body/div[1]/section/main/div/article/div/div[1]/div/div[4]/div/div/span/span[3]/select/option[45]").click()
     chrome.find_element_by_xpath(
         "/html/body/div[1]/section/main/div/article/div/div[1]/div/div[4]/div/div/span/span[2]/select/option[15]").click()
-    time.sleep(3)
+    time.sleep(2)
     chrome.find_element_by_xpath(
         "/html/body/div[1]/section/main/div/article/div/div[1]/div/div[5]/div[2]/button").click()
-    time.sleep(5)
+    time.sleep(2)
     print("Mail Onayı Bypass Ediliyor")
     print("Mail Bekleniyor")
-    chrome.find_element_by_xpath(
-        "/html/body/div[1]/section/main/div/article/div/div[1]/div/div[2]/div/button").click()
-    time.sleep(40)
-    tempchrome.find_element_by_xpath("/html/body/div/main/div/div[4]/div/div/div[1]/div[2]/div[2]/button").click()
-    time.sleep(3)
+    time.sleep(2)
+    elem = ""
+    def mailbekle():
+        global elem
+        print("Mail Bekleniyor")
+        try:
+            chrome.find_element_by_xpath("/html/body/div[1]/section/main/div/article/div/div[1]/div/div[2]/div/button").click()
+            time.sleep(40)
+            tempchrome.find_element_by_xpath("/html/body/div/main/div/div[4]/div/div/div[1]/div[2]/div[2]/button").click()
+            time.sleep(2)
+            elem = tempchrome.find_elements_by_xpath('.//span[@class = "font-weight-light"]')[0]
+        except:
+            mailbekle()
+    mailbekle()
     print("Mail Geldi")
-    elem = tempchrome.find_elements_by_xpath('.//span[@class = "font-weight-light"]')[0]
     if str(elem.text).endswith("is your Instagram code"):
         print("Mail Onay Kodu : " + str(elem.text)[0:6])
         chrome.find_element_by_xpath(
@@ -95,4 +103,5 @@ tempchrome.quit()
 print("Toplam Açılan Hesap Sayısı :" , str(kaçhesapyapalım))
 print("Script By Furkan")
 print("instagram : f.urkan7")
-input("Çıkmak için entera bas")
+sys.exit()
+
